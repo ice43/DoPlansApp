@@ -95,7 +95,14 @@ extension TaskListViewController {
     }
     
     @IBAction private func sortingList(_ sender: UISegmentedControl) {
-        
+        switch sender.selectedSegmentIndex {
+        case 0:
+            taskLists = taskLists.sorted(byKeyPath: "date", ascending: true)
+            tableView.reloadData()
+        default:
+            taskLists = taskLists.sorted(byKeyPath: "title", ascending: true)
+            tableView.reloadData()
+        }
     }
     
     @objc private func addButtonPressed() {

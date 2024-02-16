@@ -72,9 +72,9 @@ final class StorageManager {
         }
     }
     
-    func done(_ task: Task) {
+    func done(_ task: Task, withNewState isComplete: Bool) {
         write {
-            
+            task.isComplete = isComplete
         }
     }
     
