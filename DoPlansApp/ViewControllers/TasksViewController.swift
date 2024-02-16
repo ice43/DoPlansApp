@@ -64,6 +64,44 @@ extension TasksViewController {
     }
 }
 
+// MARK: - UITableViewDelegate
+extension TasksViewController {
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let task = taskList.tasks[indexPath.row]
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [unowned self] _, _, _ in
+            storageManager.delete(task)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+        
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { [unowned self] _, _, isDone in
+            showAlert(with: task) {
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+            isDone(true)
+        }
+        
+        let doneAction = UIContextualAction(style: .normal, title: "Done") { [unowned self] _, _, isDone in
+            storageManager.done(task)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            isDone(true)
+        }
+        
+        editAction.backgroundColor = .systemOrange
+        doneAction.backgroundColor = .systemGreen
+        
+        return UISwipeActionsConfiguration(actions: [doneAction, editAction, deleteAction])
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        showAlert(with: taskList.tasks[indexPath.row]) {
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+    }
+}
+
 // MARK: - AlertController
 extension TasksViewController {
     private func showAlert(with task: Task? = nil, completion: (() -> Void)? = nil) {
@@ -79,6 +117,8 @@ extension TasksViewController {
                 title: task != nil ? "Update Task" : "Save Task",
                 style: .default) { [unowned self] taskTitle, taskNote in
                     if let task, let completion {
+                        storageManager.edit(task, newTitle: taskTitle, newNote: taskNote)
+                        completion()
                         return
                     }
                     createTask(withTitle: taskTitle, andNote: taskNote)
