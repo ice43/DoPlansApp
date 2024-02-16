@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import RealmSwift
 
 final class TaskListViewController: UITableViewController {
     
-    private var taskLists: [TaskList]!
+    private var taskLists: Results<TaskList>!
     private let storageManager = StorageManager.shared
+    private let dataManager = DataManager.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,13 +26,19 @@ final class TaskListViewController: UITableViewController {
         navigationItem.rightBarButtonItem = addButton
         navigationItem.leftBarButtonItem = editButtonItem
         
-        taskLists = storageManager.fetchTaskList()
+        createTempData()
+        taskLists = storageManager.fetchData(TaskList.self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
 }
 
 // MARK: - UITableViewDataSource
 extension TaskListViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         taskLists.count
     }
     
@@ -93,6 +101,15 @@ extension TaskListViewController {
     @objc private func addButtonPressed() {
         showAlert()
     }
+    
+    private func createTempData() {
+        if !UserDefaults.standard.bool(forKey: "done") {
+            dataManager.createTempData { [unowned self] in
+                UserDefaults.standard.setValue(true, forKey: "done")
+                tableView.reloadData()
+            }
+        }
+    }
 }
 
 // MARK: - AlertController
@@ -121,7 +138,12 @@ extension TaskListViewController {
     }
     
     private func createTaskList(withTitle title: String) {
-        
+        storageManager.save(title) { taskList in
+            let rowIndex = IndexPath(row: taskLists.index(of: taskList) ?? 0, section: 0)
+            tableView.insertRows(at: [rowIndex], with: .automatic)
+        }
     }
 }
+
+
 

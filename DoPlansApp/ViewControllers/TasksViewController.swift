@@ -6,13 +6,15 @@
 //
 
 import UIKit
+import RealmSwift
 
 final class TasksViewController: UITableViewController {
     
     var taskList: TaskList!
     
-    private var currentTasks: [Task] = []
-    private var completedTasks: [Task] = []
+    private let storageManager = StorageManager.shared
+    private var currentTasks: Results<Task>!
+    private var completedTasks: Results<Task>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,8 +26,10 @@ final class TasksViewController: UITableViewController {
             target: self,
             action: #selector(addButtonPressed)
         )
-        
         navigationItem.rightBarButtonItems = [addButton, editButtonItem]
+        
+        currentTasks = taskList.tasks.filter("isComplete = false")
+        completedTasks = taskList.tasks.filter("isComplete = true")
     }
     
     @objc private func addButtonPressed() {
@@ -84,7 +88,10 @@ extension TasksViewController {
         present(alertController, animated: true)
     }
     
-    private func createTask(withTitle: String, andNote: String) {
-        
+    private func createTask(withTitle title: String, andNote note: String) {
+        storageManager.save(title, withNote: note, to: taskList) { task in
+            let rowIndex = IndexPath(row: currentTasks.index(of: task) ?? 0, section: 0)
+            tableView.insertRows(at: [rowIndex], with: .automatic)
+        }
     }
 }
