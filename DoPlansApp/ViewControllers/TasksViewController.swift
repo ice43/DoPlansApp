@@ -19,6 +19,7 @@ final class TasksViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .systemGraySpecial
         title = taskList.title
         
         let addButton = UIBarButtonItem(
@@ -30,6 +31,8 @@ final class TasksViewController: UITableViewController {
         
         currentTasks = taskList.tasks.filter("isComplete = false")
         completedTasks = taskList.tasks.filter("isComplete = true")
+        
+        setBlurredNavBar()
     }
     
     @objc private func addButtonPressed() {
@@ -57,8 +60,11 @@ extension TasksViewController {
         let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
         
         content.text = task.title
+        content.textProperties.color = .white
         content.secondaryText = task.note
+        content.secondaryTextProperties.color = .white
         
+        cell.backgroundColor = .systemGraySpecial
         cell.contentConfiguration = content
         return cell
     }
@@ -111,6 +117,15 @@ extension TasksViewController {
             tableView.reloadRows(at: [indexPath], with: .automatic)
         }
     }
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let header = view as? UITableViewHeaderFooterView else { return }
+        
+        let attributedString = NSAttributedString(
+            string: header.textLabel?.text ?? "",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.darkGray]
+        )
+        header.textLabel?.attributedText = attributedString
+    }
 }
 
 // MARK: - AlertController
@@ -144,5 +159,20 @@ extension TasksViewController {
             let rowIndex = IndexPath(row: currentTasks.index(of: task) ?? 0, section: 0)
             tableView.insertRows(at: [rowIndex], with: .automatic)
         }
+    }
+}
+
+// MARK: - UI Improvements
+extension TasksViewController {
+    private func setBlurredNavBar() {
+        let appearance = UINavigationBarAppearance()
+
+        appearance.backgroundEffect = UIBlurEffect(style: .dark)
+        appearance.backgroundColor = .clear
+        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        appearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
 }

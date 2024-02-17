@@ -16,6 +16,7 @@ final class TaskListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemGraySpecial
         
         let addButton = UIBarButtonItem(
             barButtonSystemItem: .add,
@@ -28,6 +29,7 @@ final class TaskListViewController: UITableViewController {
         
         createTempData()
         taskLists = storageManager.fetchData(TaskList.self)
+        setBlurredNavBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,8 +50,11 @@ extension TaskListViewController {
         let taskList = taskLists[indexPath.row]
         
         content.text = taskList.title
-        content.secondaryText = taskList.tasks.count.formatted()
+        content.textProperties.color = .white
+        content.secondaryText = taskList.tasks.filter("isComplete = true").count.formatted()
+        content.secondaryTextProperties.color = .white
         
+        cell.backgroundColor = .systemGraySpecial
         cell.contentConfiguration = content
         return  cell
     }
@@ -149,6 +154,21 @@ extension TaskListViewController {
             let rowIndex = IndexPath(row: taskLists.index(of: taskList) ?? 0, section: 0)
             tableView.insertRows(at: [rowIndex], with: .automatic)
         }
+    }
+}
+
+// MARK: - UI Improvements
+extension TaskListViewController {
+    private func setBlurredNavBar() {
+        let appearance = UINavigationBarAppearance()
+
+        appearance.backgroundEffect = UIBlurEffect(style: .dark)
+        appearance.backgroundColor = .clear
+        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        appearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
 }
 
