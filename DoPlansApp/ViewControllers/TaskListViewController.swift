@@ -144,8 +144,10 @@ extension TaskListViewController {
                 createTaskList(withTitle: newValue)
             }
             .addAction(title: "Cancel", style: .destructive)
+            .setBlurView()
         
         let alertController = alertBuilder.build()
+
         present(alertController, animated: true)
     }
     

@@ -22,6 +22,19 @@ final class AlertControllerBuilder {
          */
     init(title: String, message: String) {
         alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let attributedTitle = NSAttributedString(
+            string: title,
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
+        )
+        alertController.setValue(attributedTitle, forKey: "attributedTitle")
+
+        // Создание атрибутированной строки для сообщения с белым цветом текста
+        let attributedMessage = NSAttributedString(
+            string: message,
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
+        )
+        alertController.setValue(attributedMessage, forKey: "attributedMessage")
     }
     
     /**
@@ -60,6 +73,20 @@ final class AlertControllerBuilder {
             alertController.addAction(action)
             return self
         }
+    
+    func setBlurView() {
+        let container = alertController.view.subviews.first!.subviews.first!.subviews.first!
+        container.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+
+        // Создание эффекта размытого фона
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = container.bounds
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        // Добавление размытого фона в контейнер
+        container.insertSubview(blurView, at: 0)
+    }
     
     /**
          Создает и возвращает экземпляр `UIAlertController`, созданный на основе установленных параметров и действий.
