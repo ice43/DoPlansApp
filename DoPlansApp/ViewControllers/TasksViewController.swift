@@ -73,13 +73,10 @@ extension TasksViewController {
 // MARK: - UITableViewDelegate
 extension TasksViewController {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        var task = taskList.tasks[indexPath.row]
         
-        if indexPath.section == 0 {
-            task = currentTasks[indexPath.row]
-        } else {
-            task = completedTasks[indexPath.row]
-        }
+        let task = indexPath.section == 0
+            ? currentTasks[indexPath.row]
+            : completedTasks[indexPath.row]
         
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [unowned self] _, _, _ in
             storageManager.delete(task)
@@ -113,7 +110,12 @@ extension TasksViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        showAlert(with: taskList.tasks[indexPath.row]) {
+        
+        let task = indexPath.section == 0
+            ? currentTasks[indexPath.row]
+            : completedTasks[indexPath.row]
+        
+        showAlert(with: task) {
             tableView.reloadRows(at: [indexPath], with: .automatic)
         }
     }
