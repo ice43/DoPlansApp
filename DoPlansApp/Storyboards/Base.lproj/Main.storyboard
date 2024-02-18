@@ -63,6 +63,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Task Lists" id="9Ze-TC-B0A"/>
+                    <connections>
+                        <outlet property="segmentedControl" destination="E2L-zA-M9R" id="5tk-m6-2BC"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JDC-Hc-MmF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

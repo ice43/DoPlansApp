@@ -10,6 +10,8 @@ import RealmSwift
 
 final class TaskListViewController: UITableViewController {
     
+    @IBOutlet private weak var segmentedControl: UISegmentedControl!
+    
     private var taskLists: Results<TaskList>!
     private let storageManager = StorageManager.shared
     private let dataManager = DataManager.shared
@@ -17,6 +19,15 @@ final class TaskListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGraySpecial
+        
+        segmentedControl.setTitleTextAttributes(
+            [.foregroundColor: UIColor.white],
+            for: .normal
+        )
+        segmentedControl.setTitleTextAttributes(
+            [.foregroundColor: UIColor.black],
+            for: .selected
+        )
         
         let addButton = UIBarButtonItem(
             barButtonSystemItem: .add,
@@ -36,6 +47,29 @@ final class TaskListViewController: UITableViewController {
         super.viewWillAppear(animated)
         tableView.reloadData()
     }
+    
+    @objc private func addButtonPressed() {
+        showAlert()
+    }
+    
+    private func createTempData() {
+        if !UserDefaults.standard.bool(forKey: "done") {
+            dataManager.createTempData { [unowned self] in
+                UserDefaults.standard.setValue(true, forKey: "done")
+                tableView.reloadData()
+            }
+        }
+    }
+    
+    @IBAction private func sortingList(_ sender: UISegmentedControl) {
+        taskLists = taskLists.sorted(
+            byKeyPath: sender.selectedSegmentIndex == 0
+                            ? "date"
+                            : "title",
+            ascending: true
+        )
+        tableView.reloadData()
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -51,8 +85,16 @@ extension TaskListViewController {
         
         content.text = taskList.title
         content.textProperties.color = .white
-        content.secondaryText = taskList.tasks.filter("isComplete = true").count.formatted()
+        
+        if taskList.tasks.filter("isComplete = false").isEmpty {
+            cell.accessoryType = .checkmark
+            content.secondaryText = ""
+        } else {
+            content.secondaryText = taskList.tasks.filter("isComplete = false").count.formatted()
+            cell.accessoryType = .none
+        }
         content.secondaryTextProperties.color = .white
+        
         
         cell.backgroundColor = .systemGraySpecial
         cell.contentConfiguration = content
@@ -79,6 +121,10 @@ extension TaskListViewController {
         
         let doneAction = UIContextualAction(style: .normal, title: "Done") { [unowned self] _, _, isDone in
             storageManager.done(taskList)
+        
+            let cell = tableView.cellForRow(at: indexPath)
+            cell?.accessoryType = .checkmark
+
             tableView.reloadRows(at: [indexPath], with: .automatic)
             isDone(true)
         }
@@ -97,30 +143,6 @@ extension TaskListViewController {
         guard let tasksVC = segue.destination as? TasksViewController else { return }
         let taskList = taskLists[indexPath.row]
         tasksVC.taskList = taskList
-    }
-    
-    @IBAction private func sortingList(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            taskLists = taskLists.sorted(byKeyPath: "date", ascending: true)
-            tableView.reloadData()
-        default:
-            taskLists = taskLists.sorted(byKeyPath: "title", ascending: true)
-            tableView.reloadData()
-        }
-    }
-    
-    @objc private func addButtonPressed() {
-        showAlert()
-    }
-    
-    private func createTempData() {
-        if !UserDefaults.standard.bool(forKey: "done") {
-            dataManager.createTempData { [unowned self] in
-                UserDefaults.standard.setValue(true, forKey: "done")
-                tableView.reloadData()
-            }
-        }
     }
 }
 

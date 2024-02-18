@@ -91,19 +91,16 @@ extension TasksViewController {
         }
         
         let doneAction = UIContextualAction(style: .normal, title: "Done") { [unowned self] _, _, isDone in
-            storageManager.done(task, withNewState: !task.isComplete)
-            tableView.reloadData()
-            tableView.reloadRows(at: [indexPath], with: .automatic)
+            storageManager.done(task)
+            let destinationIndexPath = IndexPath(row: 0, section: task.isComplete ? 1 : 0)
+            tableView.moveRow(at: indexPath, to: destinationIndexPath)
             isDone(true)
         }
         
         editAction.backgroundColor = .systemOrange
         doneAction.backgroundColor = .systemGreen
-        if !task.isComplete {
-            doneAction.title = "Done"
-        } else {
-            doneAction.title = "Undone"
-        }
+        
+        doneAction.title = !task.isComplete ? "Done" : "Undone"
         
         return UISwipeActionsConfiguration(actions: [doneAction, editAction, deleteAction])
     }

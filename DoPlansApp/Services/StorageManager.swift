@@ -81,9 +81,9 @@ final class StorageManager {
         }
     }
     
-    func done(_ task: Task, withNewState isComplete: Bool) {
+    func done(_ task: Task) {
         write {
-            task.isComplete = isComplete
+            task.isComplete.toggle()
         }
     }
     
