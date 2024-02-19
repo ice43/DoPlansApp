@@ -62,12 +62,9 @@ final class TaskListViewController: UITableViewController {
     }
     
     @IBAction private func sortingList(_ sender: UISegmentedControl) {
-        taskLists = taskLists.sorted(
-            byKeyPath: sender.selectedSegmentIndex == 0
-                            ? "date"
-                            : "title",
-            ascending: true
-        )
+        taskLists = sender.selectedSegmentIndex == 0
+            ? taskLists.sorted(byKeyPath: "date")
+            : taskLists.sorted(byKeyPath: "title")
         tableView.reloadData()
     }
 }
@@ -80,24 +77,10 @@ extension TaskListViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TaskListCell", for: indexPath)
-        var content = cell.defaultContentConfiguration()
         let taskList = taskLists[indexPath.row]
         
-        content.text = taskList.title
-        content.textProperties.color = .white
-        
-        if taskList.tasks.filter("isComplete = false").isEmpty {
-            cell.accessoryType = .checkmark
-            content.secondaryText = ""
-        } else {
-            content.secondaryText = taskList.tasks.filter("isComplete = false").count.formatted()
-            cell.accessoryType = .none
-        }
-        content.secondaryTextProperties.color = .white
-        
-        
+        cell.configure(with: taskList)
         cell.backgroundColor = .systemGraySpecial
-        cell.contentConfiguration = content
         return  cell
     }
 }

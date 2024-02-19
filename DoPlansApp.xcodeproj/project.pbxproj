@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD153D462B8381F1004EE66D /* Extension + UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD153D452B8381F1004EE66D /* Extension + UITableViewCell.swift */; };
 		CD98E5AE2B7E1ED0003F1347 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD98E5AD2B7E1ED0003F1347 /* AppDelegate.swift */; };
 		CD98E5B02B7E1ED0003F1347 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD98E5AF2B7E1ED0003F1347 /* SceneDelegate.swift */; };
 		CD98E5B22B7E1ED0003F1347 /* TaskListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD98E5B12B7E1ED0003F1347 /* TaskListViewController.swift */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CD153D452B8381F1004EE66D /* Extension + UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UITableViewCell.swift"; sourceTree = "<group>"; };
 		CD98E5AA2B7E1ED0003F1347 /* DoPlansApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DoPlansApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD98E5AD2B7E1ED0003F1347 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CD98E5AF2B7E1ED0003F1347 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +53,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD153D442B8381C6004EE66D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CD153D452B8381F1004EE66D /* Extension + UITableViewCell.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		CD98E5A12B7E1ED0003F1347 = {
 			isa = PBXGroup;
 			children = (
@@ -71,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				CD98E5C22B7E1F30003F1347 /* ViewControllers */,
+				CD153D442B8381C6004EE66D /* Extensions */,
 				CD98E5C62B7E1F71003F1347 /* Factories */,
 				CD98E5C72B7E1F80003F1347 /* Models */,
 				CD98E5C52B7E1F63003F1347 /* Services */,
@@ -226,6 +237,7 @@
 				CD98E5CB2B7E2003003F1347 /* TaskList.swift in Sources */,
 				CD98E5CF2B7E2026003F1347 /* StorageManager.swift in Sources */,
 				CD98E5AE2B7E1ED0003F1347 /* AppDelegate.swift in Sources */,
+				CD153D462B8381F1004EE66D /* Extension + UITableViewCell.swift in Sources */,
 				CD98E5C92B7E1FE9003F1347 /* AlertControllerBuilder.swift in Sources */,
 				CD98E5B02B7E1ED0003F1347 /* SceneDelegate.swift in Sources */,
 			);
