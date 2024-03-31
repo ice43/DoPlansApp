@@ -8,9 +8,3 @@ Realm is used for the database, mock data is implemented in the DataManager. The
 <img src="https://github.com/ice43/DoPlansApp/assets/92436401/37a6a055-8c62-48b1-b2fb-1ad58e30f089" width="250" height="550"/>
 <img src="https://github.com/ice43/DoPlansApp/assets/92436401/6a82e96e-d23f-4690-9e8a-60103750b7d1" width="250" height="550"/>
 <img src="https://github.com/ice43/DoPlansApp/assets/92436401/d1fe0ccb-0ed0-4c50-b614-265c151d0cc7" width="250" height="550"/>
-
-
-
-
-
-
